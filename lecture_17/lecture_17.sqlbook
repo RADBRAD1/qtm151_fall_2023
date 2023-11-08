@@ -1,0 +1,246 @@
+-- SQLBook: Markup
+# <span style="color:darkblue"> Lecture 17 - Import Tables in SQL </span>
+
+<font size = "5">
+
+In the previous class we ...
+
+- Connected to an SQL server
+- Introduced data manipulation basics
+
+In this class we will
+
+- Review Entity Relationship Diagrams (ERD)
+- Create and activate a new database
+- Import data from ".csv" files
+- Merge tables
+
+-- SQLBook: Markup
+# <span style="color:darkblue"> I. Enitity Relationship Diagrams </span>
+
+<font size = "5">
+
+United States Congress dataset
+
+<img src="figures/rdb_us_congress.png" alt="drawing" width="650"/>
+-- SQLBook: Markup
+# <span style="color:darkblue"> II. Create and Activate a New Database </span>
+-- SQLBook: Code
+-- Active: 1698674191041@@127.0.0.1@5432@postgres
+
+DROP DATABASE IF EXISTS us_congress;
+-- SQLBook: Code
+-- Active: 1698674191041@@127.0.0.1@5432@us_congress
+CREATE SCHEMA bills;
+
+CREATE SCHEMA members;
+-- SQLBook: Code
+-- Active: 1698674191041@@127.0.0.1@5432@formula1
+DROP TABLE IF EXISTS results;
+-- SQLBook: Code
+-- Active: 1698674191041@@127.0.0.1@5432@postgres
+DROP TABLE IF EXISTS races;
+-- SQLBook: Markup
+<font size = "5">
+
+- Make sure you connect to the ```us_congress``` database before proceeding 
+
+- Click on the ```Active Connection``` button and choose the correct database
+-- SQLBook: Code
+-- Active: 1698674191041@@127.0.0.1@5432@us_congress
+DROP TABLE IF EXISTS bills.bills_actions;
+DROP TABLE IF EXISTS bills.bills_subjects;
+DROP TABLE IF EXISTS members.us_congress_members;
+-- SQLBook: Markup
+# <span style="color:darkblue"> III. Import CSV into SQL </span>
+
+<font size = "5">
+
+- There are different options to import CVS files into SQL
+
+- Two popular options are using the ```COPY``` command and using **pgAdmin** 
+
+- See this link: https://hevodata.com/learn/postgresql-import-csv/
+
+- **Optional: we will not use it in this class**
+
+1. Using the ```COPY``` command
+
+    For the instructor's computer this is:
+
+    <font size = "4">
+
+    ```sql
+    COPY us_congress_members
+    FROM 'C:\Users\jjestra\Documents\Emory\QTM151\lecture_17\data\us_congress_members.csv'
+    WITH (DELIMITER ',', FORMAT csv, HEADER MATCH);
+    ```
+
+    **Disadvantages:**
+    
+    1.1 You have to create the tables, columns and their types manually (See Lecture 16)
+
+    1.2 The column types in your CSV **must coincide precisely** with the types you define in SQL (this can be very tricky!)
+
+    1.3 When the Postgres server is running locally on your computer, it will be running under a user account that's different from your own. It does not have permission to read or write local files! (difficult to chage permissions)
+
+<font size = "5">
+
+2.  Using **pgAdmin:** if you are interested look at the steps in the link above (**I will not use this method!**)
+
+    <font size = "4">
+    
+     **Disadvantages:**
+
+     2.1. The same disadvantages I mentioned in 1.1 and 1.2
+
+     2.2. You have to use a new program
+-- SQLBook: Markup
+### <span style="color:darkblue"> Our solutuon: use **Pandas** </span>
+
+<font size = "5">
+
+- We will use three different Python packages: ```pandas```, ```sqlalchemy``` (https://www.sqlalchemy.org/), and ```psycopg2``` (https://pypi.org/project/psycopg2/)
+
+- **Process:**
+
+    1. Read the CSV file using ```Pandas```
+
+    2. Create an SQL connection with our localhost server using the ```sqlalchemy``` function **create_engine**
+
+    3. Use the ```pandas ``` function **to_sql** to create the table
+
+- See the example in ```csv_to_sql.ipynb```
+
+<font size = "4">
+
+- **Advantages:**
+
+    1. We don't need to manually create a new SQL table 
+
+    2. We don't need to pre-defined the variables types
+
+    3. We use a program we already know! 
+
+- **Disadvantage:** we don't control the columns types (they come directly from the pandas table)
+-- SQLBook: Markup
+<font size = "5">
+
+Try it yourself!
+
+- Import the table "bills_subjects.csv" using the procedure described above
+
+- Import the table "bills_actions.csv" using the procedure described above
+
+- Use the same ```csv_to_sql.ipynb``` to do the process
+-- SQLBook: Markup
+
+<font size = "5">
+
+Try it yourself!
+
+Use the following code to view the datasets: us_congress_members, bills_subjects, bills_actions
+
+```sql
+SELECT * FROM schemas_name.tables_name
+```
+-- SQLBook: Code
+-- Write your own code
+SELECT * FROM members.us_congress_members;
+-- SQLBook: Markup
+# <span style="color:darkblue"> III. Merge Data </span>
+
+<font size = "5">
+
+<span style="color:red"> Common Pitfall: </span>
+Import the data before proceeding!
+-- SQLBook: Markup
+<font size = "5">
+
+Count unique rows
+-- SQLBook: Code
+-- COUNT(DISTINCT ) computes the number of unique rows
+-- "AS" is the alias or name of the statistic
+
+SELECT COUNT(DISTINCT party_name) AS num_distinct_parties,
+       COUNT(*) AS num_members       
+FROM members.us_congress_members
+-- SQLBook: Markup
+<font size = "5">
+Display unique rows
+-- SQLBook: Code
+SELECT party_name       
+FROM members.us_congress_members
+GROUP BY party_name
+-- SQLBook: Markup
+<font size = "5">
+
+Count members of group
+-- SQLBook: Code
+-- Active: 1698674191041@@127.0.0.1@5432@us_congress
+SELECT party_name,       
+       COUNT(*) AS num_members       
+FROM members.us_congress_members
+GROUP BY party_name;
+-- SQLBook: Markup
+<font size = "5">
+
+Merge Databases
+-- SQLBook: Code
+-- FROM indicates the primary table
+-- LEFT JOIN indicates the secondary table for merging
+-- ON ... = ... is the matching column
+-- We use the "." to indicate the key in each of the tables
+-- The format is
+-----  ON table1.key = table2.key
+
+SELECT * 
+FROM bills.bills_actions
+LEFT JOIN members.us_congress_members
+ON us_congress_members.member_id  = bills_actions.member_id;
+-- SQLBook: Markup
+<font size = "5">
+
+Try it yourself!
+
+- Merge the ```bills_actions``` and the ```bills_subjects``` tables
+
+- When mergin on more than one key use the following structure:
+
+<font size = "4">
+
+```sql
+SELECT * FROM schema1.table1
+LEFT JOIN schema2.table2
+ON schema1.table1.key1_1 = schema2.table2.key2_1
+AND schema1.table1.key1_2 = schema2.table2.key2_2
+AND schema1.table1.key1_3 = schema2.table2.key2_3;
+```
+
+<font size = "5">
+
+- **Hint:** the rows in the two tables are uniquely identified by the columns: ```congress```, ```bill_number```, ```bill_type```
+-- SQLBook: Code
+-- Active: 1698674191041@@127.0.0.1@5432@us_congress
+-- Write your own code
+SELECT * FROM bills.bills_actions
+LEFT JOIN bills.bills_subjects
+ON bills.bills_actions.congress = bills.bills_subjects.congress
+AND bills.bills_actions.bill_number = bills.bills_subjects.bill_number
+AND bills.bills_actions.bill_type = bills.bills_subjects.bill_type;
+-- SQLBook: Markup
+# <span style="color:darkblue"> IV. (Optional) Additional Resources </span>
+
+<font size = "5">
+
+Overview of SQL:
+
+https://www.youtube.com/watch?v=27axs9dO7AE
+
+Introduction to databases:
+
+https://www.youtube.com/watch?v=wR0jg0eQsZA
+
+Introduction to Entity Relationship Diagrams
+
+https://www.youtube.com/watch?v=wR0jg0eQsZA

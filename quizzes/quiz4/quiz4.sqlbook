@@ -1,0 +1,143 @@
+-- SQLBook: Markup
+# Quiz 4
+-- SQLBook: Markup
+## Submit this file. No need to convert to HTML
+-- SQLBook: Markup
+<font size = "5">
+Write your Emory ID as a comment (use double dash)
+-- SQLBook: Code
+
+-- SQLBook: Markup
+<font size = "5" >
+This quiz is open book 
+
+- You can use the lecture notes
+- You will get partial credit for attempting the questions
+- To get full credit, the code should run as intended
+- You should <span style="color:red"> NOT </span> communicate with other students
+
+Write the following message as a comment: <br>
+
+"I will abide by Emory's code of conduct"
+
+-- SQLBook: Code
+
+-- SQLBook: Markup
+
+<font size = "5">
+
+(a) Create a new lap_times table and add data manually
+
+$\quad$ <img src="figures/codebook_lap_times.png" alt="drawing" width="300"/>
+
+<font size = "3">
+
+- Activate the ```formula1``` database (if you do not have that database in your ```localhost``` server, create a new database called "formula1")
+
+- Run the command ``` DROP TABLE IF EXISTS lap_times; ```
+
+- Use the command ```CREATE TABLE lap_times (... ) ``` to create an <br>
+empty table with the headers of the "lap_times" table, using the information in <br>
+the image and following the instructions in Lecture 16
+
+- Add three rows in the ```lap_times``` table with the following information
+
+|  raceId |  driverId |  lap | position  | time  | milliseconds |
+|---|---|---|---|---| ---|
+|841 | 20 |	1 |1 |01:38.1| 98109 |
+|167 |64 |48 |10 |01:14.0 |73984 |
+|341 |3 |65 |13 |01:29.6 |89626 |
+
+
+HINT: Include any column names with upper case in doube quotations, <br> e.g.
+"raceId". If you don't you'll get an error
+-- SQLBook: Code
+-- Write your own code
+-- SQLBook: Code
+-- Write your own code
+-- SQLBook: Markup
+<font size = "5">
+
+(b) Use the ``` pandas ``` and ```sqlalchemy``` packages to import the CSF file: "data_raw/pit_stops.csv"
+
+<font size = "3">
+
+- Create a new Jupyter Notebook file to import the CSV file into the ```formula1``` database
+
+- You also have to submit the Jupyter Notebook file you created for this quiz
+
+HINT: Remember to use the ```create_engine``` and ```to_sql``` functions <br>
+See Lectures 17 and 18 for more details.
+-- SQLBook: Markup
+<font size = "5">
+
+(c) Subset and sort
+
+<font size = "3">
+
+- SELECT all the columns FROM the pit_stops dataset
+- Then subset rows with 1 $\le$ lap $\le$ 5 using <br>
+ ``` WHERE ```
+- Then sort the datasets in ascending order of <br>
+"milliseconds"
+
+HINT: Remember to always refer to column names with at <br>
+least one capital letter with double quotations, e.g. "driverId" <br>
+HINT: See Lecture 16
+-- SQLBook: Code
+-- Write your own code
+-- SQLBook: Markup
+<font size = "5">
+
+(d) Groupby + Aggregate
+
+
+<font size = "3">
+
+- Compute the minimum and the maximum "milliseconds", <br>
+grouped by "driverId" using SELECT, FROM, and GROUP BY.
+
+
+HINT: See the end of lectures 16
+-- SQLBook: Code
+-- Write your own code
+-- SQLBook: Markup
+
+<font size = "5">
+
+(e) Groupby + Aggregate + Sort
+
+<font size = "3">
+
+- Select the "driverId" and count the total <br>
+number of rows by "driverId" ```GROUP BY``` <br>
+ - Then sort by the count of the rows using ```ORDER BY``` <br>
+ in descending order
+
+HINT: Remember to include "driverId" in double <br>
+quotations it includes a mix of lower case and upper case letters
+-- SQLBook: Code
+-- Write your own code
+-- SQLBook: Markup
+
+<font size = "5">
+
+(e) Groupby + Aggregate + Subset
+
+<font size = "3">
+
+- Select the "driverId" and count the total <br>
+number of rows by "driverId" ```GROUP BY``` <br>
+ - Then subset drivers with more than 200 stops <br>
+ using ```HAVING ```
+-- SQLBook: Code
+-- Write your own code
+-- SQLBook: Code
+
+-- BASIC SYNTAX OF SQL:
+
+-- Commands separated by a semicolon ";"
+-- Commands in upper case, inputs lower case
+-- Include comments with two dashes "--"
+-- Arguments in parenthesis, separated by a comma ","
+-- For strings, use single quotations '...', not double "...".

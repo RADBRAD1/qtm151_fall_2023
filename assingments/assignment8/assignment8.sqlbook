@@ -1,0 +1,121 @@
+-- SQLBook: Markup
+# Assignment 8
+-- SQLBook: Markup
+## Submit this file. No need to convert to HTML
+-- SQLBook: Markup
+<font size = "5">
+Add a comment with your Emory ID below
+-- SQLBook: Code
+-- Write your own code
+
+-- SQLBook: Markup
+<font size = "5">
+
+(a) Create a new SQL database called formula1
+-- SQLBook: Code
+-- Write your own code
+
+-- SQLBook: Markup
+
+<font size = "5">
+
+(b) Import "lap_times" into the formula1 database from the CSV file.
+
+$\quad$ <img src="figures/codebook_lap_times.png" alt="drawing" width="300"/>
+
+<font size = "3">
+
+- Create a new Jupyther Notebook in the assignment8 folder called ```csv_to_sql_a8.ipynb``` where you follow the steps to upload the CSV data:
+
+    1. Use ```pandas``` to read the "data_raw/lap_times.csv"
+
+    2. Use the ```create_engine``` function from the ```sqlalchemy``` package to create a connection with the Postgres database formula1
+
+    3. Use the ```to_sql``` function to upload the table into the database
+
+HINTS:
+
+- We did not create any schemas 
+
+- You do not need to use the ```connect_args``` option if you are not specifying a schema!
+
+-- SQLBook: Markup
+<font size = "5">
+
+(b) Import "drivers" data from CSV.
+
+$\quad$ <img src="figures/codebook_drivers.png" alt="drawing" width="300"/>
+
+<font size = "3">
+
+- Repeat part (a) but this time create a table "drivers" and  import the data from "data_raw/drivers.csv" using the same Jupyter Notebook (```csv_to_sql_a8.ipynb```)
+
+-- SQLBook: Markup
+<font size = "5">
+
+(c) Subset and sort
+
+<font size = "3">
+
+- Use ```WHERE``` to get a subset of "drivers" with 
+```nationality = 'American'```
+- Chain this with ```ORDER BY surname ASC``` to sort in <br>
+ascending order
+
+Hints:
+
+- Remember you need to connect to the formula1 database!
+- Remember to start the chain with ```SELECT * FROM drivers```
+- In SQL you only need a single equality "="
+- In SQL use single quotes for logical conditions with strings '...'
+-- SQLBook: Code
+-- Write your own code
+
+-- SQLBook: Markup
+<font size = "5">
+
+(e) Count unique values
+
+<font size = "3">
+
+- Count the number of unique "driverId" using ```COUNT(DISTINCT ...)``` <br>
+from the dataset "drivers"
+
+HINT: See the lecture 17 for details<br>
+HINT: Include "driverId" in quotations since it has a mix of <br>
+upper case and lower case letters
+-- SQLBook: Code
+-- Write your own code
+
+-- SQLBook: Markup
+<font size = "5">
+
+(d) Groupby + Aggregate + Sort
+
+<font size = "3">
+
+- Obtain the average of "milliseconds" by "driverId" using ```GROUP BY```
+- Use ```ORDER BY ``` to sort by the average of "milliseconds"
+
+HINT: See the end of lectures 17 and 18 for details <br>
+HINT: Include "driverId" in quotations since it has a mix of <br>
+upper case and lower case letters
+-- SQLBook: Code
+-- Write your own code
+
+-- SQLBook: Markup
+<font size = "5">
+
+(f) Merge two tables
+
+<font size = "3">
+
+- Merge the tables "lap_times" (primary) and "drivers" (secondary) <br>
+on "driverId" using ```LEFT JOIN``` with the option <br>
+```ON lap_times."driverId"  = drivers."driverId"```
+
+HINT: See the lecture 18 for details <br>
+HINT: Include "driverId" in quotations since it has a mix of <br>
+upper case and lower case letters
+-- SQLBook: Code
+-- Write your own code
